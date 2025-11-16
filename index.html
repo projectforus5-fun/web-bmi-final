@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <style>
+        /* CSS untuk mereplikasi tampilan ala aplikasi desktop */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font bergaya Windows */
+            background-color: #f0f0f0; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px; /* Tambah padding */
+            border: 1px solid #c0c0c0;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            width: 550px; /* Perluas lebar container */
+        }
+        h2 {
+            text-align: center; /* Diposisikan di tengah */
+            margin-bottom: 25px;
+            font-size: 1.5em; /* Ukuran lebih besar */
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        /* PENTING: Struktur Flexbox untuk Dua Kolom */
+        .input-group {
+            display: flex;
+            gap: 40px; /* Jarak antara kolom diperluas */
+        }
+        .col-left, .col-right {
+            flex: 1; 
+        }
+        /* Akhir Struktur Flexbox */
+
+        label {
+            display: block;
+            margin-top: 15px; /* Tambah margin atas */
+            margin-bottom: 5px;
+            font-size: 1em;
+            font-weight: bold;
+        }
+        
+        /* PENYESUAIAN PENTING DI SINI: Lebar Input Dibuat 100% */
+        input[type="text"], select {
+            width: 100%; 
+            padding: 8px 10px; /* Tambah padding input */
+            border: 1px solid #7f9db9; 
+            border-radius: 0; 
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px; /* Tambah margin atas */
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        button {
+            padding: 10px 25px; /* Tambah padding tombol */
+            border: 1px solid #000;
+            border-radius: 0;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            width: 45%; /* Buat tombol berbagi lebar */
+        }
+        #btnhitung { 
+            background-color: #4CAF50; 
+            color: white; 
+            border-color: #2e7d32;
+        }
+        #btnreset { 
+            background-color: #f44336; 
+            color: white; 
+            border-color: #d32f2f;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            border: 1px dashed #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>BMI CALCULATOR</h2>
+        <div class="input-group">
+            
+            <div class="col-left">
+                <label for="txtnama">Nama:</label>
+                <input type="text" id="txtnama" placeholder="">
+
+                <label for="txtusia">Usia:</label>
+                <input type="text" id="txtusia" placeholder="">
+                
+                <label for="txtjk">Jenis Kelamin:</label>
+                <select id="txtjk">
+                    <option value="">-- Pilih Jenis Kelamin --</option>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                </select>
+            </div>
+
+            <div class="col-right">
+                <label for="txttb">Tinggi Badan (cm):</label>
+                <input type="text" id="txttb" placeholder="">
+                
+                <label for="txtbb">Berat Badan (kg):</label>
+                <input type="text" id="txtbb" placeholder="">
+                
+                <div style="height: 48px;"></div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button type="button" id="btnhitung">Cek BMI</button>
+            <button type="button" id="btnreset">Reset</button>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // SCRIPT Fungsionalitas (sudah diperbaiki)
+        window.onload = function() {
+            const btnH = document.getElementById("btnhitung");
+            const btnR = document.getElementById("btnreset");
+            const result = document.getElementById("result");
+
+            btnH.addEventListener("click", function() {
+                const nama = document.getElementById("txtnama").value.trim();
+                const usia = document.getElementById("txtusia").value.trim();
+                const jk = document.getElementById("txtjk").value;
+                const tinggi = parseFloat(document.getElementById("txttb").value);
+                const berat = parseFloat(document.getElementById("txtbb").value);
+
+                if(!nama || !usia || !jk || isNaN(tinggi) || isNaN(berat) || tinggi <= 0 || berat <= 0) {
+                    result.textContent = "Mohon isi semua data dengan benar!";
+                    result.style.color = "red";
+                    return;
+                }
+
+                const bmi = berat / ((tinggi/100) ** 2);
+                let ket = "";
+
+                if(bmi < 18.5) ket = "Underweight";
+                else if(bmi < 25) ket = "Normal/Ideal";
+                else if(bmi < 30) ket = "Overweight";
+                else ket = "Obese";
+
+                result.style.color = "black";
+                result.innerHTML = `
+                    <hr>
+                    *Halo ${nama}* (${jk}, ${usia} tahun)<br>
+                    BMI Anda: *${bmi.toFixed(2)}*<br>
+                    *Kategori: ${ket}*
+                `;
+            });
+
+            btnR.addEventListener("click", function() {
+                document.getElementById("txtnama").value = "";
+                document.getElementById("txtusia").value = "";
+                document.getElementById("txtjk").value = "";
+                document.getElementById("txttb").value = "";
+                document.getElementById("txtbb").value = "";
+                result.textContent = "";
+                result.removeAttribute('style');
+            });
+        };
+    </script>
+</body>
+</html>
